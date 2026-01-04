@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleanCity | Modern Waste Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #10b981;
+            --primary-blue: #0ea5e9;
+            --dark-slate: #1e293b;
+            --glass-white: rgba(255, 255, 255, 0.8);
+            --bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Poppins', sans-serif; 
+        }
+
+        body { 
+            background: var(--bg-gradient);
+            color: var(--dark-slate);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Animation for page transitions */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-active {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        /* Modern Navigation */
+        header {
+            background: var(--glass-white);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 1.2rem 8%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { 
+            font-size: 1.6rem; 
+            font-weight: 700; 
+            color: var(--dark-slate);
+            letter-spacing: -1px;
+        }
+        .logo span { color: var(--primary-green); }
+
+        .nav-links { display: flex; list-style: none; gap: 30px; }
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--dark-slate); 
+            font-weight: 500; 
+            font-size: 0.95rem;
+            cursor: pointer; 
+            transition: 0.3s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0; height: 2px;
+            bottom: -5px; left: 0;
+            background: var(--primary-green);
+            transition: 0.3s;
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Auth Container Upgrade */
+        .auth-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://images.unsplash.com/photo-1518173946687-a4c8a9833d8e?auto=format&fit=crop&q=80&w=2000') center/cover;
+            position: relative;
+        }
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.8), rgba(14, 165, 233, 0.8));
+        }
+
+        .auth-card {
+            background: var(--glass-white);
+            backdrop-filter: blur(16px);
+            padding: 3rem;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        /* Inputs & Buttons */
+        input, select, textarea { 
+            width: 100%; 
+            padding: 14px 20px; 
+            margin: 12px 0; 
+            border: 1px solid rgba(0,0,0,0.1); 
+            border-radius: 12px; 
+            background: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary-green); background: white; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
+
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--primary-green), #059669); 
+            color: white; 
+            border: none; 
+            padding: 14px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            width: 100%; 
+            font-weight: 600; 
+            font-size: 1rem; 
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: 0.3s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+
+        /* Dashboard Aesthetic */
+        .page { padding: 60px 8%; max-width: 1400px; margin: auto; }
+        
+        h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 30px; letter-spacing: -1px; }
+
+        .dashboard-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .card { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 24px; 
+            text-align: left; 
+            cursor: pointer; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover { 
+            transform: translateY(-10px); 
+            border-color: var(--primary-green);
+        }
+        .card h3 { font-size: 1.4rem; margin-bottom: 10px; }
+        .card p { color: #64748b; font-size: 0.95rem; }
+        .card-icon { font-size: 2.5rem; margin-bottom: 20px; display: block; }
+
+        /* Table Aesthetic */
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 18px; color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 18px; border-top: 1px solid #f1f5f9; font-size: 1rem; }
+        tr:hover { background: #f8fafc; }
+
+        /* Guide Cards */
+        .guide-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+        }
+        .guide-card { 
+            padding: 30px; 
+            border-radius: 24px; 
+            color: white; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 200px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .wet { background: linear-gradient(135deg, #10b981, #059669); }
+        .dry { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+        .e-waste { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .guide-card h3 { font-size: 1.6rem; }
+    </style>
+</head>
+<body>
+
+    <header id="main-header" class="hidden">
+        <nav style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo">Clean<span>City</span></div>
+            <ul class="nav-links">
+                <li><a onclick="showPage('dashboard')">Dashboard</a></li>
+                <li><a onclick="showPage('report')">Report</a></li>
+                <li><a onclick="showPage('schedule')">Schedule</a></li>
+                <li><a onclick="showPage('guide')">Guide</a></li>
+                <li><a onclick="logout()" style="color: #ef4444;">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="login-page" class="auth-container">
+            <div class="auth-card">
+                <div class="logo" style="margin-bottom: 10px; font-size: 2rem;">Clean<span>City</span></div>
+                <p style="color: #64748b; margin-bottom: 25px;">Welcome back! Please login.</p>
+                <form onsubmit="handleLogin(event)">
+                    <input type="email" placeholder="Email Address" required>
+                    <input type="password" placeholder="Password" required>
+                    <button type="submit" class="btn-primary">Sign In</button>
+                </form>
+                <p style="margin-top:20px; font-size: 0.9rem;">New here? <a href="#" onclick="showPage('signup-page')" style="color: var(--primary-green); font-weight:600; text-decoration:none;">Create Account</a></p>
+            </div>
+        </section>
+
+        <section id="signup-page" class="auth-container hidden">
+            <div class="auth-card">
+                <h2>Create Account</h2>
+                <p style="color: #64748b; margin-bottom: 25px;">Join the green movement.</p>
+                <form onsubmit="handleLogin(event)">
+                    <input type="text" placeholder="Full Name" required>
+                    <input type="email" placeholder="Email Address" required>
+                    <input type="password" placeholder="Create Password" required>
+                    <button type="submit" class="btn-primary">Get Started</button>
+                </form>
+                <p style="margin-top:20px; font-size: 0.9rem;">Already have an account? <a href="#" onclick="showPage('login-page')" style="color: var(--primary-green); font-weight:600; text-decoration:none;">Login</a></p>
+            </div>
+        </section>
+
+        <section id="dashboard" class="page hidden">
+            <h1 style="margin-bottom: 10px;">Welcome back, User! 👋</h1>
+            <p style="color: #64748b; margin-bottom: 40px;">What would you like to do today?</p>
+            <div class="dashboard-grid">
+                <div class="card" onclick="showPage('report')">
+                    <span class="card-icon">📍</span>
+                    <h3>Report Waste</h3>
+                    <p>Found a messy spot? Mark the location and alert our team instantly.</p>
+                </div>
+                <div class="card" onclick="showPage('schedule')">
+                    <span class="card-icon">📅</span>
+                    <h3>Pick-up Schedule</h3>
+                    <p>Stay updated with real-time garbage collection times in your sector.</p>
+                </div>
+                <div class="card" onclick="showPage('guide')">
+                    <span class="card-icon">♻️</span>
+                    <h3>Recycling Guide</h3>
+                    <p>Learn how to segregate waste correctly and earn eco-points.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="report" class="page hidden">
+            <h1>Report Waste Issue</h1>
+            <div style="background: white; padding: 40px; border-radius: 24px; box-shadow: var(--card-shadow); max-width: 600px;">
+                <form onsubmit="handleSubmit(event)">
+                    <label style="font-weight: 600; font-size: 0.9rem;">Issue Location</label>
+                    <input type="text" placeholder="e.g. 123 Green Street, Sector 5" required>
+                    
+                    <label style="font-weight: 600; font-size: 0.9rem;">Type of Waste</label>
+                    <select>
+                        <option>Wet Waste (Organic)</option>
+                        <option>Dry Waste (Recyclables)</option>
+                        <option>Hazardous / E-Waste</option>
+                    </select>
+                    
+                    <label style="font-weight: 600; font-size: 0.9rem;">Description</label>
+                    <textarea placeholder="Tell us more about the issue..." rows="4"></textarea>
+                    
+                    <button type="submit" class="btn-primary">Submit Report</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="schedule" class="page hidden">
+            <h1>Collection Schedule</h1>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>Area / Sector</th><th>Days</th><th>Expected Time</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sector 1 (Residential)</td><td>Mon, Wed, Fri</td><td><strong>08:00 AM</strong></td></tr>
+                        <tr><td>Sector 2 (Market Area)</td><td>Daily</td><td><strong>09:30 AM</strong></td></tr>
+                        <tr><td>Sector 3 (Industrial)</td><td>Tue, Thu, Sat</td><td><strong>11:00 AM</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="guide" class="page hidden">
+            <h1>Segregation Guide</h1>
+            <div class="guide-grid">
+                <div class="guide-card wet">
+                    <h3>Wet Waste</h3>
+                    <p>Fruits, vegetable peels, leftover food, and organic garden waste.</p>
+                    <strong style="margin-top: 15px;">Bin: Green</strong>
+                </div>
+                <div class="guide-card dry">
+                    <h3>Dry Waste</h3>
+                    <p>Plastic bottles, paper, cardboard, glass jars, and metal cans.</p>
+                    <strong style="margin-top: 15px;">Bin: Blue</strong>
+                </div>
+                <div class="guide-card e-waste">
+                    <h3>E-Waste</h3>
+                    <p>Batteries, old phones, wires, and broken electronic appliances.</p>
+                    <strong style="margin-top: 15px;">Bin: Yellow/Red</strong>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all sections and remove animation class
+            document.querySelectorAll('section').forEach(s => {
+                s.classList.add('hidden');
+                s.classList.remove('page-active');
+            });
+
+            // Show current section and add animation
+            const target = document.getElementById(pageId);
+            target.classList.remove('hidden');
+            setTimeout(() => {
+                target.classList.add('page-active');
+            }, 10);
+            
+            // Toggle header visibility
+            const header = document.getElementById('main-header');
+            if(pageId === 'login-page' || pageId === 'signup-page') {
+                header.classList.add('hidden');
+            } else {
+                header.classList.remove('hidden');
+            }
+            window.scrollTo(0,0);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            showPage('dashboard');
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert("✅ Report Received! Our cleanup crew has been dispatched.");
+            showPage('dashboard');
+        }
+
+        function logout() {
+            if(confirm("Are you sure you want to logout?")) {
+                showPage('login-page');
+            }
+        }
+    </script>
+</body>
+</html>
